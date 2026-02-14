@@ -1,27 +1,20 @@
-# Programa de inventario
+# Inventory
 
-Este proyecto es una aplicación de gestión de inventario básico.  
-En esta primera versión no incluye herramientas de análisis de productos.
+### Description
+This project is an Inventory Management System developed in Java following an incremental development approach using sprints.
 
-El proyecto trabaja con:
-- SQLite como base de datos
-- Archivos Excel para que el usuario lleve un historial diario del inventario
-- Una interfaz gráfica (GUI) desarrollada con JavaFX
+The current stage corresponds to Sprint 1, which focuses on implementing the core logic of the system and creating the Product model in memory.
 
----
+During this sprint, the main objective is to establish a solid object-oriented foundation, including:
 
-### Estructura (Primera parte)
+- Definition of the product entity
 
-- **Main**: pruebas iniciales en consola
-- **Product**
-  - **Ingredient**: contiene los datos de los ingredientes
-  - **Product**: contiene los datos del producto
-  - **ManagerProducts**: contiene la lógica para manejar los productos e ingredientes
+- Validation rules to ensure data integrity
 
----
+- Encapsulation of attributes
 
-### Descripción
+- Proper implementation of equals() and hashCode()
 
-En esta primera parte del proyecto se implementa la estructura base que permite:
-agregar, eliminar, editar, vender y recargar productos e ingredientes.  
-En esta etapa, los productos aún no incluyen ingredientes.
+- Custom toString() formatting
+
+The system currently operates entirely in memory and does not yet include persistence or a user interface.
