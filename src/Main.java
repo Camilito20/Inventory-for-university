@@ -1,5 +1,6 @@
 
 
+import GUI.MainWindow;
 import Product.ManagerProduct;
 import Product.ManagerProduct.*;
 import Product.Product;
@@ -11,9 +12,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     static ManagerProduct mp = new ManagerProduct();
     public static void main(String[] args) {
-
-
-
+        MainWindow window = new MainWindow();
 
         while (true){
             try {

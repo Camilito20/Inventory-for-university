@@ -27,8 +27,9 @@ public class ManagerProduct {
         throw new IllegalArgumentException("The product was not found.");
     }
 
-    public void addProduct(String name, int code, int stock, double price){
+    public void addProduct(String name, int code, int stock, double price) throws IllegalArgumentException{
         if (name == null||name.isBlank()) throw new IllegalArgumentException("The product name cannot be blank.");
+
         for (Product p: products) if (p.getCode() == code) throw new IllegalArgumentException("The product code already exists in the system.");
         if (stock < 0) throw new IllegalArgumentException("The product stock cannot be negative");
         if (price < 0.0) throw new IllegalArgumentException("The product price cannot be negative");
@@ -44,7 +45,7 @@ public class ManagerProduct {
         return "The product has been removed.";
     }
 
-    public String editProduct(Product p, String name, Integer code, Integer stock, Double price){
+    public void editProduct(Product p, String name, Integer code, Integer stock, Double price){
         if(p == null) throw new IllegalArgumentException("The product has no data");
 
         if (name != null)p.setName(name);
@@ -52,16 +53,15 @@ public class ManagerProduct {
         if (stock != null)p.setStock(stock);
         if (price != null)p.setPrice(price);
 
-        return "The Product was successfully edited.";
     }
 
-    public String sellProduct(Product p, int sale){
+    public void sellProduct(Product p, int sale){
         if(p == null) throw new IllegalArgumentException("The product has no data");
 
         if (sale > p.getStock()) throw new IllegalArgumentException("The quantity exceeds the available stock");
 
         p.setStock(p.getStock() - sale);
-        return sale + " " + p.getName() + " have been sold," + p.getStock() + " products remain.";
+
     }
 
     public String restockProduct(Product p, int restock){
