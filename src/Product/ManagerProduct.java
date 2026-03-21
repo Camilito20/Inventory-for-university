@@ -1,5 +1,7 @@
 package Product;
 
+import database.ProductRepository;
+
 import java.util.ArrayList;
 
 public class ManagerProduct {
@@ -11,7 +13,7 @@ public class ManagerProduct {
 
     public Product searchProduct(int code){
         for (Product p: products) {
-            if (p.getCode() == code) {
+            if (Integer.parseInt(p.getCode()) == code) {
                 return p;
             }
         }
@@ -30,17 +32,18 @@ public class ManagerProduct {
     public void addProduct(String name, int code, int stock, double price) throws IllegalArgumentException{
         if (name == null||name.isBlank()) throw new IllegalArgumentException("The product name cannot be blank.");
 
-        for (Product p: products) if (p.getCode() == code) throw new IllegalArgumentException("The product code already exists in the system.");
+        for (Product p: products) if (Integer.parseInt(p.getCode()) == code) throw new IllegalArgumentException("The product code already exists in the system.");
         if (stock < 0) throw new IllegalArgumentException("The product stock cannot be negative");
         if (price < 0.0) throw new IllegalArgumentException("The product price cannot be negative");
 
         Product p = new Product(name, code, stock, price);
+        new ProductRepository().save(p);
 
         products.add(p);
     }
 
     public String removeProduct(int code) {
-        boolean removed = products.removeIf(prod -> prod.getCode() == code);
+        boolean removed = products.removeIf(prod -> Integer.parseInt(prod.getCode()) == code);
         if (!removed) throw new IllegalArgumentException("Product not found in the system");
         return "The product has been removed.";
     }

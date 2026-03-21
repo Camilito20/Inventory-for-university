@@ -43,8 +43,8 @@ public class Product {
         return name;
     }
 
-    public int getCode() {
-        return code;
+    public String getCode() {
+        return String.format("%03d", code);
     }
 
     public int getStock() {
@@ -58,7 +58,7 @@ public class Product {
     @Override
     public String toString(){
         return "Name: " + getName() + "\n"
-                + "Code: " + String.format("%03d", getCode()) + "\n"
+                + "Code: " + getCode() + "\n"
                 + "Stock: " + getStock() + "\n"
                 + "Price: " + getPrice() + "\n\n";
     }
