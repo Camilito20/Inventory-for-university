@@ -1,55 +1,51 @@
-# Inventory
+# Inventory Management System
 
 ## Description
+This project is an Inventory Management System developed in Java following an incremental and iterative approach using sprints.
 
-This project is an Inventory Management System developed in Java following an incremental development approach using sprints.
-
-The current stage corresponds to Sprint 1, which focuses on implementing the core logic of the system and creating the Product model in memory.
-
-During this sprint, the main objective is to establish a solid object-oriented foundation, including:
-
-- Definition of the product entity
-- Validation rules to ensure data integrity
-- Encapsulation of attributes
-- Proper implementation of equals() and hashCode()
-- Custom toString() formatting
-- Implementation of a product manager to handle core operations
-
-The system currently operates entirely in memory and does not yet include persistence or a user interface.
+The system is being built across 7 sprints, where each sprint adds new functionality and improves the architecture.
 
 ---
 
-## Architecture Overview (Sprint 1)
+## Current Stage — Sprint 2
 
-The system currently consists of two main components:
+### Sprint 1 Recap
+In Sprint 1, the core logic of the system was implemented entirely in memory. This included:
 
-### Product (Entity Model)
-
-Represents a product in the inventory system.
-
-Attributes:
-- name – Product name (cannot be null or blank)
-- code – Unique identifier (cannot be negative)
-- stock – Available quantity (cannot be negative)
-- price – Product price (cannot be negative)
-
-Key characteristics:
-- Encapsulation with getters and setters
-- Data validation enforced at object level
-- equals() and hashCode() based on unique product code
-- Custom formatted output using toString()
+- Product model creation
+- Data validation rules
+- CRUD operations (Create, Read, Update, Delete)
+- Basic inventory management
+- Console-based testing (Main class)
 
 ---
 
-### ManagerProduct (Core Logic Layer)
+### Sprint 2 — Database Integration
 
-Handles product management operations in memory.
+In this sprint, the system was extended to support persistent storage using SQL.
 
-Responsibilities:
-- Add new products with validation
-- Prevent duplicate product codes
-- Search products by code
-- Edit product information
-- Remove products
-- Sell products (with stock validation)
-- Restock products
+### Implemented Features
+
+- Database connection using JDBC
+- Creation of `products` table
+- Implementation of ProductRepository (DAO pattern)
+- CRUD operations connected to the database
+- Data persistence (data is saved and retrieved from SQL)
+- Error handling for database operations
+
+---
+## Database
+
+- SQL database (PostgreSQL / SQLite depending on configuration)
+- Table: `products`
+
+Example structure:
+
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    category VARCHAR(50),
+    price DOUBLE PRECISION NOT NULL,
+    stock INT NOT NULL
+);
