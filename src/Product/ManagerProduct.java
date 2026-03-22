@@ -3,6 +3,7 @@ package Product;
 import database.ProductRepository;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ManagerProduct {
 
@@ -11,18 +12,15 @@ public class ManagerProduct {
     public ManagerProduct(){};
 
 
-    public Product searchProduct(int code){
-        for (Product p: products) {
-            if (Integer.parseInt(p.getCode()) == code) {
-                return p;
-            }
-        }
-        throw new IllegalArgumentException("The product was not found.");
+    public Product searchProduct(int code) throws IllegalArgumentException{
+        String codeString = String.format("%03d", code);
+
+        return new ProductRepository().show(codeString);
     }
 
     private Product searchProduct(Product product){
         for (Product p: products) {
-            if (p.getCode() == product.getCode()) {
+            if (Objects.equals(p.getCode(), product.getCode())) {
                 return p;
             }
         }
@@ -67,13 +65,12 @@ public class ManagerProduct {
 
     }
 
-    public String restockProduct(Product p, int restock){
+    public void restockProduct(Product p, int restock){
         if(p == null) throw new IllegalArgumentException("The product has no data");
 
         if (restock < 0) throw new IllegalArgumentException("The restock quantity cannot be negative.");
 
         p.setStock(p.getStock() + restock);
 
-            return restock + " " + p.getName() + " were restocked," + p.getStock() + " products remain.";
     }
 }

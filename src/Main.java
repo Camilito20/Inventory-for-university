@@ -36,7 +36,7 @@ public class Main {
                     case 4 -> sellProduct();
                     case 5 -> restockProduct();
                     case 6 -> {
-                        System.out.print("Product code to edit: ");
+                        System.out.print("Product code to show: ");
                         int codeProduct = sc.nextInt();
                         sc.nextLine();
                         Product product = mp.searchProduct(codeProduct);
