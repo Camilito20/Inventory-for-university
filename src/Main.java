@@ -5,6 +5,7 @@ import Product.ManagerProduct;
 import Product.ManagerProduct.*;
 import Product.Product;
 
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -31,7 +32,7 @@ public class Main {
 
                 switch (option) {
                     case 1 -> addProduct();
-                    case 2 -> System.out.println(removeProduct());
+                    case 2 -> removeProduct();
                     case 3 -> editProduct();
                     case 4 -> sellProduct();
                     case 5 -> restockProduct();
@@ -51,11 +52,13 @@ public class Main {
             } catch (IllegalArgumentException e){
                 System.out.println(e.getMessage());
                 System.out.println(e.getLocalizedMessage());
+            } catch (SQLException e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
 
-    public static void addProduct()throws IllegalArgumentException, InputMismatchException{
+    public static void addProduct()throws IllegalArgumentException, InputMismatchException, SQLException {
         Product product;
         System.out.print("Name product: ");
         String name = sc.nextLine();
@@ -73,12 +76,12 @@ public class Main {
         sc.nextLine();
         mp.addProduct(name, code, stock, price);
     }
-    public static String removeProduct() throws IllegalArgumentException, InputMismatchException{
+    public static void removeProduct() throws IllegalArgumentException, InputMismatchException, SQLException {
         System.out.print("Product code to remove: ");
         int code = sc.nextInt();
         sc.nextLine();
 
-        return mp.removeProduct(code);
+        mp.removeProduct(code);
 
     }
     public static void editProduct() throws IllegalArgumentException, InputMismatchException{
@@ -118,8 +121,8 @@ public class Main {
             }
         }
     }
-    public static void sellProduct() throws IllegalArgumentException, InputMismatchException{
-        System.out.print("Product code to edit: ");
+    public static void sellProduct() throws IllegalArgumentException, InputMismatchException, SQLException{
+        System.out.print("Product code to sold: ");
         int codeProduct = sc.nextInt();
         sc.nextLine();
         Product product = mp.searchProduct(codeProduct);
@@ -128,11 +131,11 @@ public class Main {
         int sale = sc.nextInt();
         sc.nextLine();
 
-        mp.sellProduct(product, sale);
-        System.out.println(sale + " " + product.getName() + " have been sold," + product.getStock() + " products remain.");
+        mp.sellProduct(product.getStock(), sale);
+        System.out.println(sale + " " + product.getName() + " have been sold," + product.getStock() + " products remain.\n");
     }
     public static void restockProduct() throws IllegalArgumentException, InputMismatchException{
-        System.out.print("Product code to edit: ");
+        System.out.print("Product code to restocked: ");
         int codeProduct = sc.nextInt();
         sc.nextLine();
         Product product = mp.searchProduct(codeProduct);
@@ -142,6 +145,6 @@ public class Main {
         sc.nextLine();
 
         mp.restockProduct(product, restock);
-        System.out.println(restock + " " + product.getName() + " were restocked," + product.getStock() + " products remain.");
+        System.out.println(restock + " " + product.getName() + " were restocked," + product.getStock() + " products remain.\n");
     }
 }

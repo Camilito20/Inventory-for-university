@@ -2,6 +2,7 @@ package Product;
 
 import database.ProductRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ public class ManagerProduct {
         throw new IllegalArgumentException("The product was not found.");
     }
 
-    public void addProduct(String name, int code, int stock, double price) throws IllegalArgumentException{
+    public void addProduct(String name, int code, int stock, double price) throws IllegalArgumentException, SQLException{
         if (name == null||name.isBlank()) throw new IllegalArgumentException("The product name cannot be blank.");
 
         for (Product p: products) if (Integer.parseInt(p.getCode()) == code) throw new IllegalArgumentException("The product code already exists in the system.");
@@ -35,15 +36,15 @@ public class ManagerProduct {
         if (price < 0.0) throw new IllegalArgumentException("The product price cannot be negative");
 
         Product p = new Product(name, code, stock, price);
-        new ProductRepository().save(p);
+        ProductRepository.save(p);
 
         products.add(p);
     }
 
-    public String removeProduct(int code) {
-        boolean removed = products.removeIf(prod -> Integer.parseInt(prod.getCode()) == code);
-        if (!removed) throw new IllegalArgumentException("Product not found in the system");
-        return "The product has been removed.";
+    public void removeProduct(int code) throws IllegalArgumentException, SQLException {
+        String codeString = String.format("%03d", code);
+
+        new ProductRepository().deleteProduct(codeString);
     }
 
     public void editProduct(Product p, String name, Integer code, Integer stock, Double price){
@@ -56,12 +57,15 @@ public class ManagerProduct {
 
     }
 
-    public void sellProduct(Product p, int sale){
-        if(p == null) throw new IllegalArgumentException("The product has no data");
+    public void sellProduct(int code, int sale) throws SQLException{
+        String codeString = String.format("%03d", code);
 
-        if (sale > p.getStock()) throw new IllegalArgumentException("The quantity exceeds the available stock");
+        Product product = new ProductRepository().show(codeString);
 
-        p.setStock(p.getStock() - sale);
+        if (sale > product.getStock()) throw new IllegalArgumentException("The quantity exceeds the available stock");
+        int newStock = product.getStock() - sale;
+
+        new ProductRepository().updateProduct(codeString, null, null, newStock, null);
 
     }
 

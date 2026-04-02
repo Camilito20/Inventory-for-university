@@ -19,7 +19,7 @@ public class MainWindow extends JFrame{
         //Sidebar
         JPanel sidebar = new JPanel();
         sidebar.setPreferredSize(new Dimension(400,0));
-        sidebar.setBackground(new Color(44, 44, 44));
+        sidebar.setBackground(new Color(0, 38, 165));
 
 
         //Central window

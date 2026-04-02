@@ -2,6 +2,7 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class Sidebar {
 
@@ -18,7 +19,7 @@ public class Sidebar {
         sidebar.add(Box.createVerticalStrut(40));
 
         for(JButton button: buttons(centralPanel)){
-            button.setBackground(new Color(44, 44, 44));
+            button.setBackground(new Color(0, 38, 165));
             button.setForeground(Color.WHITE);
             button.setFont(new Font("Arial", Font.PLAIN, 24));
 
@@ -35,10 +36,17 @@ public class Sidebar {
                 }
 
                 public void mouseExited(java.awt.event.MouseEvent evt) {
-                    button.setBackground(new Color(44, 44, 44));
+                    button.setBackground(new Color(0, 38, 165));
                     button.setForeground(Color.WHITE);
                 }
             });
+
+            button.addActionListener( e-> {
+                        centralPanel.removeAll();
+                        centralPanel.revalidate();
+                        centralPanel.repaint();
+                    }
+            );
 
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             sidebar.add(Box.createVerticalStrut(15));
@@ -47,13 +55,20 @@ public class Sidebar {
     }
 
     private JButton[] buttons(JPanel centralPanel){
-        JButton btnProducts = new JButton("\uD83C\uDF8E Products");
-        JButton btnInput_and_output = new JButton("\uD83D\uDCD3 Product input and output");
-        JButton btnPurchasing_and_sales = new JButton("\uD83D\uDD16 Product purchasing and sales");
-        JButton btnReports = new JButton("\uD83D\uDCC8 Reports");
-        JButton btnEmployees = new JButton("\uD83D\uDC65 Employees");
-        JButton btnSettings = new JButton("\uFE0F\u200B Settings");
+        JButton btnProducts = new JButton("Products");
+        JButton btnInput_and_output = new JButton("Stock in and out");
+        JButton btnPurchasing_and_sales = new JButton("Sales of products");
+        JButton btnReports = new JButton("Reports");
+        JButton btnEmployees = new JButton("Employees");
+        JButton btnSettings = new JButton("Settings");
 
+        btnProducts.addActionListener(e -> {
+            try {
+                new Panel_Product(centralPanel);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         return new JButton[]{
                 btnProducts,

@@ -36,9 +36,9 @@ public class DatabaseConnection {
 
     public static void main(String[] args) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            System.out.println("Conectado correctamente 🚀");
+            System.out.println("Connected");
         } catch (SQLException e) {
-            System.out.println("Error al conectar ❌");
+            System.out.println("Error connection");
             e.printStackTrace();
         }
     }
