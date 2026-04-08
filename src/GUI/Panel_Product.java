@@ -4,7 +4,6 @@ import Action_Buttons.BtnAddProduct;
 import Action_Buttons.BtnDeleteProduct;
 import Product.Product;
 import database.ProductRepository;
-import database.ProductRepository.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,10 +15,13 @@ public class Panel_Product {
     public Panel_Product(JPanel centralPanel) throws SQLException {
         centralPanel.setLayout(new BorderLayout());
 
-        //Title
+        centralPanel.add(menuBar(centralPanel), BorderLayout.NORTH);
+        centralPanel.add(tableProducts(), BorderLayout.CENTER);
+    }
+
+    protected JMenuBar menuBar(JPanel centralPanel){
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(new Color(34, 34, 128));
-        menuBar.setFont(new Font("Arial", Font.PLAIN, 30));
 
         JLabel title = new JLabel("  - Products");
         title.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -61,8 +63,10 @@ public class Panel_Product {
         menuBar.add(addProduct);
         menuBar.add(deleteProduct);
 
+        return menuBar;
+    }
 
-        //Show products
+    protected JPanel tableProducts(){
         JPanel panelProducts = new JPanel();
         panelProducts.setLayout(new BorderLayout());
 
@@ -92,6 +96,7 @@ public class Panel_Product {
             }
 
             JTable tableProducts = new JTable(model);
+
             //Titulos de las columnas
             tableProducts.getTableHeader().setBackground(new Color(34, 34, 128));
             tableProducts.getTableHeader().setForeground(Color.WHITE);
@@ -105,9 +110,7 @@ public class Panel_Product {
             panelProducts.add(scrollBar, BorderLayout.CENTER);
 
         }
-
-
-        centralPanel.add(menuBar, BorderLayout.NORTH);
-        centralPanel.add(panelProducts, BorderLayout.CENTER);
+        panelProducts.setVisible(true);
+        return panelProducts;
     }
 }

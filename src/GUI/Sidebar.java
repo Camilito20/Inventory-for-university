@@ -56,12 +56,13 @@ public class Sidebar {
 
     private JButton[] buttons(JPanel centralPanel){
         JButton btnProducts = new JButton("Products");
-        JButton btnInput_and_output = new JButton("Stock in and out");
+        JButton btnStock_in_and_out = new JButton("Stock in and out");
         JButton btnPurchasing_and_sales = new JButton("Sales of products");
         JButton btnReports = new JButton("Reports");
         JButton btnEmployees = new JButton("Employees");
         JButton btnSettings = new JButton("Settings");
 
+        //Action buttons
         btnProducts.addActionListener(e -> {
             try {
                 new Panel_Product(centralPanel);
@@ -69,10 +70,17 @@ public class Sidebar {
                 throw new RuntimeException(ex);
             }
         });
+        btnStock_in_and_out.addActionListener(e ->{
+            try {
+                new StockIn_and_out(centralPanel);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
 
+        });
         return new JButton[]{
                 btnProducts,
-                btnInput_and_output,
+                btnStock_in_and_out,
                 btnPurchasing_and_sales,
                 btnReports,
                 btnEmployees,

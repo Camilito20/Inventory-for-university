@@ -4,11 +4,12 @@ import Product.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductRepository {
 
-    public Product show(String id) throws IllegalArgumentException{
-        String sql = "SELECT name, code, stock, price FROM products WHERE code = '" + id + "' ORDER BY code";
+    public static Product show(String id) throws IllegalArgumentException{
+        String sql = "SELECT id, name, code, stock, price FROM products WHERE code = '" + id + "' ORDER BY code";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
@@ -17,6 +18,7 @@ public class ProductRepository {
             Product product = null;
             while (rs.next()) {
                 product = new Product(
+                        rs.getInt("id"),
                         rs.getString("name"),
                         Integer.parseInt(rs.getString("code")),
                         rs.getInt("stock"),
@@ -35,7 +37,7 @@ public class ProductRepository {
     public static ArrayList<Product> show() throws IllegalArgumentException{
         ArrayList<Product> products = new ArrayList<>();
 
-        String sql = "SELECT name, code, stock, price FROM products";
+        String sql = "SELECT id, name, code, stock, price FROM products";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
@@ -44,6 +46,7 @@ public class ProductRepository {
             Product product = null;
             while (rs.next()) {
                 product = new Product(
+                        rs.getInt("id"),
                         rs.getString("name"),
                         Integer.parseInt(rs.getString("code")),
                         rs.getInt("stock"),
@@ -96,6 +99,49 @@ public class ProductRepository {
                 throw new IllegalArgumentException("Product not found in database.");
             }
         }
+    }
+
+    //Inserta el ingreso o salida de productos
+    public static void sellOrRestockProduct(int id, String type, int numSell) throws SQLException, IllegalArgumentException{
+        String sql = "INSERT INTO movements (product_id, type, quantity) VALUES (?, ?, ?)";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)){
+
+            statement.setInt(1, id);
+            statement.setString(2, type);
+            statement.setInt(3, numSell);
+
+            statement.executeUpdate();
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new IllegalArgumentException("Product not found in database.");
+            }
+        }
+    }
+
+    //Muestra la entrada y la salida de los productos
+    public static ArrayList<String[]> showRestockProduct() throws SQLException {
+
+        String sql = "SELECT product_id, type, quantity FROM movements";
+
+        ArrayList<String[]> movements = new ArrayList<>();
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                movements.add(new String[]{
+                        rs.getString("type"),
+                        String.valueOf(rs.getInt("quantity")),
+                        String.valueOf(rs.getInt("product_id"))
+                });
+            }
+        }
+
+        return movements;
     }
 
     public void deleteProduct(String code) throws SQLException, IllegalArgumentException {

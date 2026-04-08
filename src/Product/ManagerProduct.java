@@ -2,6 +2,7 @@ package Product;
 
 import database.ProductRepository;
 
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -47,34 +48,33 @@ public class ManagerProduct {
         new ProductRepository().deleteProduct(codeString);
     }
 
-    public void editProduct(Product p, String name, Integer code, Integer stock, Double price){
+    public void editProduct(Product p, String name, Integer code, Integer stock, Double price) throws SQLException {
         if(p == null) throw new IllegalArgumentException("The product has no data");
 
-        if (name != null)p.setName(name);
-        if (code != null)p.setCode(code);
-        if (stock != null)p.setStock(stock);
-        if (price != null)p.setPrice(price);
+        String newName = null;
+        String newCode = null;
+        Integer newStock = null;
+        Double newPrice = null;
+        if (name != null) newName = name;
+        if (code != null) newCode = String.format("%03d", code);
+        if (stock != null) newStock = stock;
+        if (price != null) newPrice = price;
+
+        new ProductRepository().updateProduct(p.getCode(), newName, newCode, newStock, newPrice);
 
     }
 
-    public void sellProduct(int code, int sale) throws SQLException{
+    public void sellOrRestockProduct(int code, String type, int numIn_Out) throws SQLException{
         String codeString = String.format("%03d", code);
+        if (type.equalsIgnoreCase("OUT") || type.equalsIgnoreCase("IN")) throw new IllegalArgumentException("Only sell or restock");
 
         Product product = new ProductRepository().show(codeString);
 
-        if (sale > product.getStock()) throw new IllegalArgumentException("The quantity exceeds the available stock");
-        int newStock = product.getStock() - sale;
+        if (numIn_Out > product.getStock()) throw new IllegalArgumentException("The quantity exceeds the available stock");
+        int newStock = product.getStock() - numIn_Out;
 
+        new ProductRepository().sellOrRestockProduct(product.getId(), type.toUpperCase(), numIn_Out);
         new ProductRepository().updateProduct(codeString, null, null, newStock, null);
-
-    }
-
-    public void restockProduct(Product p, int restock){
-        if(p == null) throw new IllegalArgumentException("The product has no data");
-
-        if (restock < 0) throw new IllegalArgumentException("The restock quantity cannot be negative.");
-
-        p.setStock(p.getStock() + restock);
 
     }
 }
