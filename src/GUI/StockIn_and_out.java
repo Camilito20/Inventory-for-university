@@ -1,8 +1,8 @@
 package GUI;
 
-import Action_Buttons.BtnAddProduct;
-import Action_Buttons.BtnDeleteProduct;
-import Product.Product;
+import logic.Btns;
+import logic.ManagerProduct;
+import model.*;
 import database.ProductRepository;
 
 import javax.swing.*;
@@ -10,19 +10,18 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class StockIn_and_out {
+/**
+ * Esta es la clase que genera el panel al apretar el botton Stock in and out
+ * con todas las funciones que tiene el panel
+ */
+public class StockIn_and_out extends Panel_abstract {
     public StockIn_and_out(JPanel centralPanel) throws SQLException {
-        centralPanel.setLayout(new BorderLayout());
-
-
-        centralPanel.add(menuBar(), BorderLayout.NORTH);
-        centralPanel.add(tableProducts(), BorderLayout.CENTER);
+        super(centralPanel);
     }
 
-    protected JMenuBar menuBar(){
+    @Override
+    protected JMenuBar menuBar(JPanel centralPanel) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(new Color(34, 34, 128));
 
@@ -30,12 +29,41 @@ public class StockIn_and_out {
         title.setFont(new Font("Arial", Font.PLAIN, 25));
         title.setForeground(Color.WHITE);
 
+        //Entrada de productos
+        JMenu in = new JMenu("In products");
+        in.setForeground(Color.WHITE);
+        JMenuItem inProduct = new JMenuItem("In");
+        inProduct.addActionListener(e -> {
+            try {
+                new Btns().btnIn();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        in.add(inProduct);
+
+        //Salida de productos
+        JMenu out = new JMenu("Out products");
+        out.setForeground(Color.WHITE);
+        JMenuItem outProduct = new JMenuItem("Out");
+        outProduct.addActionListener(e -> {
+            try {
+                new Btns().btnOut();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        out.add(outProduct);
 
         menuBar.add(title);
+        menuBar.add(Box.createHorizontalGlue());
+        menuBar.add(in);
+        menuBar.add(out);
 
         return menuBar;
     }
 
+    @Override
     protected JPanel tableProducts() throws SQLException {
         JPanel panelProducts = new JPanel();
         panelProducts.setLayout(new BorderLayout());
@@ -49,109 +77,57 @@ public class StockIn_and_out {
             }
         };
 
-        ArrayList<Product> products = ProductRepository.show();
-        ArrayList<String[]> movements = new ArrayList<>();
-        int in = 0;
-        int out = 0;
+        ArrayList<Product> products = ManagerProduct.allProducts();
+        ArrayList<String[]> movements = ProductRepository.showRestockProduct();
 
-        if (products == null || products.isEmpty()){
+
+        if (products == null || products.isEmpty()) {
             JLabel notProducts = new JLabel("No products found in the database.");
-
+            notProducts.setHorizontalAlignment(SwingConstants.HORIZONTAL);
             panelProducts.add(notProducts, java.awt.BorderLayout.CENTER);
         } else {
             for (Product p : products) {
-                movements = ProductRepository.showRestockProduct();
-
+                int in = 0;
+                int out = 0;
+                int idObject = p.getId();
+                System.out.println(idObject);
                 for (String[] m : movements) {
-                    System.out.println(m[1]);
+                    if (Integer.parseInt(m[2]) == idObject) {
+                        if (m[0].equalsIgnoreCase("IN")) {
+                            in += Integer.parseInt(m[1]);
+                        }
 
-                    if (p.getId() == Integer.parseInt(m[3])) {
-                        if (m[1].equalsIgnoreCase("IN")) in = Integer.parseInt(m[2]);
-                        else if (m[1].equalsIgnoreCase("OUT"))
-                            out = Integer.parseInt(m[2]);
-                        else {
-                            in = 0;
-                            out = 0;
+                        if (m[0].equalsIgnoreCase("OUT")) {
+                            out += Integer.parseInt(m[1]);
                         }
                     }
                 }
 
-                model.addRow(new Object[]{
-                        p.getName(),
-                        p.getCode(),
-                        p.getStock(),
-                        p.getPrice(),
-                        in,
-                        out
-                });
+                    model.addRow(new Object[]{
+                            p.getName(),
+                            p.getCode(),
+                            p.getStock(),
+                            p.getPrice(),
+                            in,
+                            out
+                    });
+                }
+
+                JTable tableProducts = new JTable(model);
+
+                //Titulos de las columnas
+                tableProducts.getTableHeader().setBackground(new Color(34, 34, 128));
+                tableProducts.getTableHeader().setForeground(Color.WHITE);
+                tableProducts.getTableHeader().setFont(new Font("Arial", Font.BOLD, 20));
+                //Celdas normales
+                tableProducts.setRowHeight(35);
+                tableProducts.setFont(new Font("Arial", Font.PLAIN, 20));
+                tableProducts.setSelectionBackground(new Color(254, 254, 254));
+
+                JScrollPane scrollBar = new JScrollPane(tableProducts);
+                panelProducts.add(scrollBar, BorderLayout.CENTER);
             }
-
-            JTable tableProducts = new JTable(model);
-
-            //Titulos de las columnas
-            tableProducts.getTableHeader().setBackground(new Color(34, 34, 128));
-            tableProducts.getTableHeader().setForeground(Color.WHITE);
-            tableProducts.getTableHeader().setFont(new Font("Arial", Font.BOLD, 20));
-            //Celdas normales
-            tableProducts.setRowHeight(35);
-            tableProducts.setFont(new Font("Arial", Font.PLAIN, 20));
-            tableProducts.setSelectionBackground(new Color(254, 254, 254));
-
-            JScrollPane scrollBar = new JScrollPane(tableProducts);
-            panelProducts.add(buttons(tableProducts), BorderLayout.SOUTH);
-            panelProducts.add(scrollBar, BorderLayout.CENTER);
-        }
         panelProducts.setVisible(true);
         return panelProducts;
     }
-
-    private JPanel buttons(JTable tableProducts) {
-        ArrayList<Product> products = ProductRepository.show();
-
-        JButton btnIn = new JButton("IN");
-        JButton btnOut = new JButton("OUT");
-
-// Panel para botones
-        JPanel panelButtons = new JPanel();
-        panelButtons.add(btnIn);
-        panelButtons.add(btnOut);
-
-        btnOut.addActionListener(e -> {
-            int selectedRow = tableProducts.getSelectedRow();
-
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(null, "Select a product first");
-                return;
-            }
-
-            int id = products.get(selectedRow).getId();
-            int currentStock = products.get(selectedRow).getStock();
-
-            String input = JOptionPane.showInputDialog("Enter quantity to sell:");
-
-            try {
-                int quantity = Integer.parseInt(input);
-
-                if (quantity <= 0) {
-                    JOptionPane.showMessageDialog(null, "Quantity must be greater than 0");
-                    return;
-                }
-
-                if (quantity > currentStock) {
-                    JOptionPane.showMessageDialog(null, "Not enough stock");
-                    return;
-                }
-
-                ProductRepository.sellOrRestockProduct(id, "OUT", quantity);
-
-                JOptionPane.showMessageDialog(null, "Product sold successfully");
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Invalid input");
-            }
-        });
-        panelButtons.setVisible(true);
-        return panelButtons;
-    }
-
 }

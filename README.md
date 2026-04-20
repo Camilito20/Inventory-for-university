@@ -12,7 +12,7 @@ The system is being built across 7 sprints, where each sprint adds new functiona
 ### Sprint 1 Recap
 In Sprint 1, the core logic of the system was implemented entirely in memory. This included:
 
-- Product model creation
+- model model creation
 - Data validation rules
 - CRUD operations (Create, Read, Update, Delete)
 - Basic inventory management

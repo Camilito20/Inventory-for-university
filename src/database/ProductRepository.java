@@ -1,15 +1,28 @@
 package database;
 
-import Product.*;
+import logic.ManagerProduct;
+import model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Esta es la clase que se comunica con la base de datos para poder
+ * recolectar, insertar, editar o eliminar los datos que el usuario necesite
+ * cambiar según sus necesidades
+ */
+
 public class ProductRepository {
 
-    public static Product show(String id) throws IllegalArgumentException{
-        String sql = "SELECT id, name, code, stock, price FROM products WHERE code = '" + id + "' ORDER BY code";
+    /**
+     * Busca en la base de datos según el código del producto
+     *
+     * @param code Código del producto que se busca
+     * @return Product Devuelve el producto encontrado en la base de datos
+     */
+    public static Product show(String code) throws IllegalArgumentException {
+        String sql = "SELECT id, name, code, stock, price FROM products WHERE code = '" + code + "' ORDER BY code";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
@@ -34,7 +47,12 @@ public class ProductRepository {
         }
     }
 
-    public static ArrayList<Product> show() throws IllegalArgumentException{
+    /**
+     * Todos los productos de la base de datos
+     *
+     * @return ArrayList<Product> Con todos los productos
+     */
+    public static ArrayList<Product> showAllProducts() throws IllegalArgumentException {
         ArrayList<Product> products = new ArrayList<>();
 
         String sql = "SELECT id, name, code, stock, price FROM products";
@@ -55,13 +73,15 @@ public class ProductRepository {
                 products.add(product);
             }
 
-            if (product == null) return null;//throw new IllegalArgumentException("The product not fount in the database");
+            if (product == null)
+                return null;//throw new IllegalArgumentException("The product not fount in the database");
             return products;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    //Número de cuantos Productos ahi
     public static int numVariable() throws SQLException {
         String sql = """
                 SELECT COUNT(*)
@@ -78,12 +98,19 @@ public class ProductRepository {
         }
     }
 
-    public static void save (Product product) throws IllegalArgumentException, SQLException{
+    /**
+     * Insterta los productos en la base de datos con los datos que desea el cliente
+     *
+     * @param product Nuevo producto que se agregara a la base de datos
+     * @throws IllegalArgumentException Mensaje de error por si el producto ya existe
+     * @throws SQLException             Por si surge un error insertar en la base de datos
+     */
+    public static void save(Product product) throws IllegalArgumentException, SQLException {
         String sql = "INSERT INTO products (code, name, stock, price) VALUES (?,?,?,?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
-             ) {
+        ) {
             ManagerProduct managerProduct = new ManagerProduct();
 
             //Remplaza los "?", por valores para guardar en la base de datos
@@ -102,17 +129,16 @@ public class ProductRepository {
     }
 
     //Inserta el ingreso o salida de productos
-    public static void sellOrRestockProduct(int id, String type, int numSell) throws SQLException, IllegalArgumentException{
+    public static void sellOrRestockProductBs(int id, String type, int numSell) throws SQLException, IllegalArgumentException {
         String sql = "INSERT INTO movements (product_id, type, quantity) VALUES (?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)){
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, id);
             statement.setString(2, type);
             statement.setInt(3, numSell);
 
-            statement.executeUpdate();
             int rowsAffected = statement.executeUpdate();
 
             if (rowsAffected == 0) {
@@ -121,10 +147,18 @@ public class ProductRepository {
         }
     }
 
-    //Muestra la entrada y la salida de los productos
+    /**
+     * Busca en la tabla de ingresos y salida, los numero de ingreso y salida de datos
+     *
+     * @return ArrayList<String [ ]> Devuelve una cadena con los parámetros:
+     * type: Indica si el producto entro o salió
+     * quantity: Cuanto producto entro o salió
+     * product_id: Es id del producto, no es lo mismo que el código
+     * @throws SQLException Por si surge un error insertar en la base de datos
+     */
     public static ArrayList<String[]> showRestockProduct() throws SQLException {
 
-        String sql = "SELECT product_id, type, quantity FROM movements";
+        String sql = "SELECT product_id, type, quantity FROM movements WHERE date >= CURRENT_DATE AND date <  CURRENT_DATE + INTERVAL '1 day'";
 
         ArrayList<String[]> movements = new ArrayList<>();
 
@@ -144,11 +178,18 @@ public class ProductRepository {
         return movements;
     }
 
+    /**
+     * Elimina el producto de la base de datos
+     *
+     * @param code Código del producto que se quiere eliminar
+     * @throws SQLException             Por si surge un error insertar en la base de datos
+     * @throws IllegalArgumentException Lanza un error por si no encuentra el producto
+     */
     public void deleteProduct(String code) throws SQLException, IllegalArgumentException {
         String sql = "DELETE FROM products WHERE code = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)){
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, code);
 
@@ -160,33 +201,52 @@ public class ProductRepository {
         }
     }
 
-    public void updateProduct(String validationCode, String newName, String newCode, Integer newStock, Double newPrice)
-    throws SQLException{
-        ArrayList<String> record = new ArrayList<>();
+    public void editProduct(int id, String newName, String newCode, Integer newStock, Double newPrice) {
+        StringBuilder sql = new StringBuilder("UPDATE products SET ");
+        List<Object> values = new ArrayList<>();
 
-        if (newName != null) record.add("name = ?");
-        if (newCode != null) record.add("code = ?");
-        if (newStock != null) record.add("stock = ?");
-        if (newPrice != null) record.add("price = ?");
+        if (newName != null) {
+            sql.append("name = ?,");
+            values.add(newName);
+        }
+        if (newCode != null) {
+            sql.append("code = ?,");
+            values.add(newCode);
+        }
+        if (newStock != null) {
+            sql.append("stock = ?,");
+            values.add(newStock);
+        }
+        if (newPrice != null) {
+            sql.append("price = ?,");
+            values.add(newPrice);
+        }
 
-        String sql = "Update products SET " +  String.join("," , record) + " WHERE code = ?" ;
+        // Evitar error si no se pasa ningún valor
+        if (values.isEmpty()) {
+            throw new IllegalArgumentException("There is nothing to change");
+        }
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        // Quitar la última coma
+        sql.setLength(sql.length() - 1);
 
-            int index = 1;
+        sql.append(" WHERE id = ?");
+        values.add(id);
 
-            if (newName != null) statement.setString(index++, newName);
-            if (newCode != null) statement.setString(index++, newCode);
-            if (newStock != null) statement.setInt(index++, newStock);
-            if (newPrice != null) statement.setDouble(index++, newStock);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
 
-            statement.setString(index, validationCode);
+            // Asignar valores a los ?
+            for (int i = 0; i < values.size(); i++) {
+                stmt.setObject(i + 1, values.get(i));
+            }
 
-            int rowsAffected = statement.executeUpdate();
+            stmt.executeUpdate();
 
-            if (rowsAffected == 0) throw new IllegalArgumentException("Product not found in database.");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
+
 

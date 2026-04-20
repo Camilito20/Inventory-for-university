@@ -1,8 +1,7 @@
 package GUI;
 
-import Action_Buttons.BtnAddProduct;
-import Action_Buttons.BtnDeleteProduct;
-import Product.Product;
+import logic.Btns;
+import model.Product;
 import database.ProductRepository;
 
 import javax.swing.*;
@@ -11,14 +10,13 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Panel_Product {
-    public Panel_Product(JPanel centralPanel) throws SQLException {
-        centralPanel.setLayout(new BorderLayout());
+public class Panel_Product extends Panel_abstract{
 
-        centralPanel.add(menuBar(centralPanel), BorderLayout.NORTH);
-        centralPanel.add(tableProducts(), BorderLayout.CENTER);
+    public Panel_Product(JPanel centralPanel) throws SQLException {
+        super(centralPanel);
     }
 
+    @Override
     protected JMenuBar menuBar(JPanel centralPanel){
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(new Color(34, 34, 128));
@@ -35,16 +33,22 @@ public class Panel_Product {
         JMenuItem delete = new JMenuItem("Delete product");
         deleteProduct.add(delete);
 
+        JMenu editProduct = new JMenu(" Edit ");
+        JMenuItem edit = new JMenuItem("Edit product");
+        editProduct.add(edit);
+
         addProduct.setForeground(Color.WHITE);
         deleteProduct.setForeground(Color.WHITE);
+        editProduct.setForeground(Color.WHITE);
 
         addProduct.setFont(new Font("Arial", Font.PLAIN, 18));
         deleteProduct.setFont(new Font("Arial", Font.PLAIN, 18));
+        editProduct.setFont(new Font("Arial", Font.PLAIN, 18));
 
         //Action MenuItems
         add.addActionListener( e -> {
             try {
-                new BtnAddProduct();
+                new Btns().btnAdd();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -52,7 +56,15 @@ public class Panel_Product {
 
         delete.addActionListener(e -> {
             try {
-                new BtnDeleteProduct();
+                new Btns().btnDelete();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        edit.addActionListener( e -> {
+            try {
+                new Btns().btnEdit();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -62,10 +74,12 @@ public class Panel_Product {
         menuBar.add(Box.createHorizontalGlue());
         menuBar.add(addProduct);
         menuBar.add(deleteProduct);
+        menuBar.add(editProduct);
 
         return menuBar;
     }
 
+    @Override
     protected JPanel tableProducts(){
         JPanel panelProducts = new JPanel();
         panelProducts.setLayout(new BorderLayout());
@@ -79,7 +93,7 @@ public class Panel_Product {
             }
         };
 
-        ArrayList<Product> products = ProductRepository.show();
+        ArrayList<Product> products = ProductRepository.showAllProducts();
 
         if (products == null || products.isEmpty()){
             JLabel notProducts = new JLabel("No products found in the database.");

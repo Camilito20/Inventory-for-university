@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
+/**
+ * En esta clase se crea la barra lateral de la aplicacion
+ * con los botones respectivos y sus funciones, que llaman a cada
+ * clase que usan para cada botone
+ */
 public class Sidebar {
 
     public Sidebar(JPanel sidebar, JPanel centralPanel){

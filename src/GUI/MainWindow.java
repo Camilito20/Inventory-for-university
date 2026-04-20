@@ -3,6 +3,10 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Es la clase principal de la interfaz grafica y llama a todas
+ * las demás clases para poder generar una interfaz funcional
+ */
 public class MainWindow extends JFrame{
 
     public MainWindow() {
@@ -31,5 +35,9 @@ public class MainWindow extends JFrame{
         add(centerPanel, BorderLayout.CENTER);
 
         setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new MainWindow();
     }
 }

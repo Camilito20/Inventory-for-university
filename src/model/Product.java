@@ -1,4 +1,4 @@
-package Product;
+package model;
 
 /**
  * Represents a product in the inventory system.
@@ -14,6 +14,7 @@ public class Product {
     private double price;
 
     public Product(int id, String name, int code, int stock, double price) {
+        setId(id);
         setName(name);
         setCode(code);
         setStock(stock);
