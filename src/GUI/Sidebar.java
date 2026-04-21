@@ -64,8 +64,8 @@ public class Sidebar {
         JButton btnStock_in_and_out = new JButton("Stock in and out");
         JButton btnPurchasing_and_sales = new JButton("Sales of products");
         JButton btnReports = new JButton("Reports");
-        JButton btnEmployees = new JButton("Employees");
-        JButton btnSettings = new JButton("Settings");
+        //JButton btnEmployees = new JButton("Employees");
+        //JButton btnSettings = new JButton("Settings");
 
         //Action buttons
         btnProducts.addActionListener(e -> {
@@ -83,13 +83,48 @@ public class Sidebar {
             }
 
         });
+        btnPurchasing_and_sales.addActionListener(e ->{
+            try {
+                new SalesOfProducts(centralPanel);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
+        btnReports.addActionListener( e -> {
+            try {
+                new Reports(centralPanel);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        /*
+        btnEmployees.addActionListener( e -> {
+
+            try {
+                new Employees(centralPanel);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        btnSettings.addActionListener( e -> {
+            try {
+                new Settings(centralPanel);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+         */
+
         return new JButton[]{
                 btnProducts,
                 btnStock_in_and_out,
                 btnPurchasing_and_sales,
-                btnReports,
-                btnEmployees,
-                btnSettings
+                btnReports
+                //btnEmployees,
+                //btnSettings
         };
     }
 }

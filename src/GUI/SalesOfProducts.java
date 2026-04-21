@@ -1,90 +1,43 @@
 package GUI;
 
-import logic.Btns;
-import model.Product;
 import database.ProductRepository;
+import logic.Btns;
+import logic.ButtonEditor;
+import logic.ButtonRenderer;
+import model.Product;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Panel_Product extends Panel_abstract{
-
-    public Panel_Product(JPanel centralPanel) throws SQLException {
+public class SalesOfProducts extends Panel_abstract{
+    public SalesOfProducts(JPanel centralPanel) throws SQLException {
         super(centralPanel);
     }
 
     @Override
-    protected JMenuBar menuBar(JPanel centralPanel){
+    JMenuBar menuBar(JPanel centralPanel) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(new Color(34, 34, 128));
 
-        JLabel title = new JLabel("  - Products");
+        JLabel title = new JLabel("  - Seles of products");
         title.setFont(new Font("Arial", Font.PLAIN, 25));
         title.setForeground(Color.WHITE);
 
-        JMenu addProduct = new JMenu(" Add ");
-        JMenuItem add = new JMenuItem("Add product");
-        addProduct.add(add);
-
-        JMenu deleteProduct = new JMenu(" Delete ");
-        JMenuItem delete = new JMenuItem("Delete product");
-        deleteProduct.add(delete);
-
-        JMenu editProduct = new JMenu(" Edit ");
-        JMenuItem edit = new JMenuItem("Edit product");
-        editProduct.add(edit);
-
-        addProduct.setForeground(Color.WHITE);
-        deleteProduct.setForeground(Color.WHITE);
-        editProduct.setForeground(Color.WHITE);
-
-        addProduct.setFont(new Font("Arial", Font.PLAIN, 18));
-        deleteProduct.setFont(new Font("Arial", Font.PLAIN, 18));
-        editProduct.setFont(new Font("Arial", Font.PLAIN, 18));
-
-        //Action MenuItems
-        add.addActionListener( e -> {
-            try {
-                new Btns().btnAdd();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        delete.addActionListener(e -> {
-            try {
-                new Btns().btnDelete();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        edit.addActionListener( e -> {
-            try {
-                new Btns().btnEdit();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
         menuBar.add(title);
-        menuBar.add(Box.createHorizontalGlue());
-        menuBar.add(addProduct);
-        menuBar.add(deleteProduct);
-        menuBar.add(editProduct);
 
         return menuBar;
     }
 
     @Override
-    protected JPanel tableProducts(){
+    JPanel tableProducts() throws SQLException {
         JPanel panelProducts = new JPanel();
         panelProducts.setLayout(new BorderLayout());
 
-        String[] columns = {"Name", "Code", "Stock", "Price"};
+        String[] columns = {"Name", "Code", "Stock", "Price", "Sell"};
 
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
@@ -94,6 +47,7 @@ public class Panel_Product extends Panel_abstract{
         };
 
         ArrayList<Product> products = ProductRepository.showAllProducts();
+
 
         if (products == null || products.isEmpty()){
             JLabel notProducts = new JLabel("No products found in the database.");
@@ -105,12 +59,11 @@ public class Panel_Product extends Panel_abstract{
                         p.getName(),
                         p.getCode(),
                         p.getStock(),
-                        p.getPrice()
+                        p.getPrice(),
+                        "Sell"
                 });
             }
-
             JTable tableProducts = new JTable(model);
-
             //Titulos de las columnas
             tableProducts.getTableHeader().setBackground(new Color(34, 34, 128));
             tableProducts.getTableHeader().setForeground(Color.WHITE);
@@ -119,6 +72,11 @@ public class Panel_Product extends Panel_abstract{
             tableProducts.setRowHeight(35);
             tableProducts.setFont(new Font("Arial", Font.PLAIN, 20));
             tableProducts.setSelectionBackground(new Color(254, 254, 254));
+            //Crea el boton en la tabla
+            tableProducts.getColumn("Sell").setCellRenderer(new ButtonRenderer());
+            tableProducts.getColumn("Sell").setCellEditor(new ButtonEditor(new JCheckBox(), tableProducts));
+
+
 
             JScrollPane scrollBar = new JScrollPane(tableProducts);
             panelProducts.add(searchBar(tableProducts, model), BorderLayout.NORTH);

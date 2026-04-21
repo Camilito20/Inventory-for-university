@@ -228,7 +228,7 @@ public class Btns extends JFrame {
 
         functionJTxtFiled(txtIn, "Example: 20");
 
-        JButton btnSave = getJButton(txtCode, txtIn);
+        JButton btnSave = getJButton(txtCode, txtIn, "IN");
 
         add(lblCode);
         add(txtCode);
@@ -251,7 +251,7 @@ public class Btns extends JFrame {
         txtOut.setText("Example: 20");
 
         functionJTxtFiled(txtOut, "Example: 20");
-        JButton btnSave = getJButton(txtCode, txtOut);
+        JButton btnSave = getJButton(txtCode, txtOut, "OUT");
 
         add(lblCode);
         add(txtCode);
@@ -261,7 +261,7 @@ public class Btns extends JFrame {
     }
 
 
-    private JButton getJButton(JTextField txtCode, JTextField txtIn) {
+    private JButton getJButton(JTextField txtCode, JTextField txtInOrOut, String inOrOut) {
         JButton btnSave = new JButton("Save");
 
         btnSave.addActionListener(e->{
@@ -269,7 +269,7 @@ public class Btns extends JFrame {
             int productsIn;
             try {
                 code = Integer.parseInt(txtCode.getText());
-                productsIn = Integer.parseInt(txtIn.getText());
+                productsIn = Integer.parseInt(txtInOrOut.getText());
             } catch (NumberFormatException exception){
                 JOptionPane.showMessageDialog(
                         null,
@@ -281,7 +281,7 @@ public class Btns extends JFrame {
             }
 
             try {
-                new ManagerProduct().sellOrRestockProduct(code, "IN", productsIn);
+                new ManagerProduct().sellOrRestockProduct(code, inOrOut, productsIn);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }

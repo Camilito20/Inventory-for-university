@@ -125,6 +125,7 @@ public class StockIn_and_out extends Panel_abstract {
                 tableProducts.setSelectionBackground(new Color(254, 254, 254));
 
                 JScrollPane scrollBar = new JScrollPane(tableProducts);
+                panelProducts.add(searchBar(tableProducts, model), BorderLayout.NORTH);
                 panelProducts.add(scrollBar, BorderLayout.CENTER);
             }
         panelProducts.setVisible(true);

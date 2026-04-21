@@ -178,6 +178,29 @@ public class ProductRepository {
         return movements;
     }
 
+    public static ArrayList<String[]> showMovementsProduct() throws SQLException {
+
+        String sql = "SELECT product_id, type, quantity, date FROM movements";
+
+        ArrayList<String[]> movements = new ArrayList<>();
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                movements.add(new String[]{
+                        rs.getString("type"),
+                        String.valueOf(rs.getInt("quantity")),
+                        String.valueOf(rs.getInt("product_id")),
+                        String.valueOf(rs.getTimestamp("date"))
+                });
+            }
+        }
+
+        return movements;
+    }
+
     /**
      * Elimina el producto de la base de datos
      *
