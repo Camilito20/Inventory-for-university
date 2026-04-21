@@ -38,7 +38,7 @@ public class Reports extends Panel_abstract{
         JMenuItem outProduct = new JMenuItem("Out");
         outProduct.addActionListener(e -> {
             try {
-                new Btns().btnOut();
+                new Btns().btnOut(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -114,8 +114,8 @@ public class Reports extends Panel_abstract{
 
                     if (in > 0 || out > 0){
                         model.addRow(new Object[]{
-                                p.getCode(),
                                 p.getName(),
+                                p.getCode(),
                                 in,
                                 out,
                                 date

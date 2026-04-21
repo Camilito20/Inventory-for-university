@@ -1,10 +1,14 @@
 package GUI;
 
+import database.ProductRepository;
+import model.Product;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Clase abstracta para todos los paneles y barras superiores que se tendra
@@ -12,10 +16,13 @@ import java.sql.SQLException;
  */
 abstract public class Panel_abstract {
     public Panel_abstract(JPanel centralPanel) throws SQLException {
+        centralPanel.removeAll();
         centralPanel.setLayout(new BorderLayout());
 
         centralPanel.add(menuBar(centralPanel), BorderLayout.NORTH);
         centralPanel.add(tableProducts(), BorderLayout.CENTER);
+        centralPanel.revalidate();
+        centralPanel.repaint();
     }
 
     /**
@@ -37,7 +44,9 @@ abstract public class Panel_abstract {
      * @return Panel para agregarlo a panel central o al panel necesario
      */
     protected JPanel searchBar(JTable tableProducts, DefaultTableModel model) {
-        JTextField txtSearch = new JTextField(20);
+        JTextField txtSearch = new JTextField(50);
+        txtSearch.setText("Name product");
+        functionJTxtFiled(txtSearch, "Name product");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         tableProducts.setRowSorter(sorter);
@@ -75,4 +84,24 @@ abstract public class Panel_abstract {
 
         return topPanel;
     }
+
+    private void functionJTxtFiled(JTextField textField, String txt){
+        textField.setMaximumSize(new Dimension(200, 20));
+        textField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (textField.getText().equals(txt)) {
+                    textField.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setText(txt);
+                }
+            }
+        });
+    }
+
 }

@@ -35,7 +35,7 @@ public class StockIn_and_out extends Panel_abstract {
         JMenuItem inProduct = new JMenuItem("In");
         inProduct.addActionListener(e -> {
             try {
-                new Btns().btnIn();
+                new Btns().btnIn(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -48,7 +48,7 @@ public class StockIn_and_out extends Panel_abstract {
         JMenuItem outProduct = new JMenuItem("Out");
         outProduct.addActionListener(e -> {
             try {
-                new Btns().btnOut();
+                new Btns().btnOut(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }

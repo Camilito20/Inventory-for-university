@@ -48,7 +48,7 @@ public class Panel_Product extends Panel_abstract{
         //Action MenuItems
         add.addActionListener( e -> {
             try {
-                new Btns().btnAdd();
+                new Btns().btnAdd(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -56,7 +56,7 @@ public class Panel_Product extends Panel_abstract{
 
         delete.addActionListener(e -> {
             try {
-                new Btns().btnDelete();
+                new Btns().btnDelete(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -64,7 +64,7 @@ public class Panel_Product extends Panel_abstract{
 
         edit.addActionListener( e -> {
             try {
-                new Btns().btnEdit();
+                new Btns().btnEdit(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }

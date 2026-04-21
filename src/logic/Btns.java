@@ -1,5 +1,7 @@
 package logic;
 
+import GUI.Panel_Product;
+import GUI.StockIn_and_out;
 import model.Product;
 
 import javax.swing.*;
@@ -17,7 +19,7 @@ public class Btns extends JFrame {
         setVisible(true);
     }
 
-    public void btnAdd() throws SQLException{
+    public void btnAdd(JPanel centralPanel) throws SQLException{
         JLabel lblName = new JLabel("Name:");
         lblName.setFont(new Font("Arial",  Font.PLAIN, 18));
         JTextField txtName = new JTextField();
@@ -70,6 +72,7 @@ public class Btns extends JFrame {
 
             try {
                 new ManagerProduct().addProduct(name, code, stock, price);
+                new Panel_Product(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -91,9 +94,10 @@ public class Btns extends JFrame {
 
         add(new JLabel());
         add(btnSave);
+
     };
 
-    public void btnDelete() throws SQLException{
+    public void btnDelete(JPanel centralPanel) throws SQLException{
         JLabel lblCode = new JLabel("Code:");
         lblCode.setFont(new Font("Arial",  Font.PLAIN, 18));
     JTextField txtCode = new JTextField();
@@ -104,9 +108,10 @@ public class Btns extends JFrame {
         try {
             int code = Integer.parseInt(txtCode.getText());
             new ManagerProduct().removeProduct(code);
-
+            new Panel_Product(centralPanel);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
+
         } catch (NumberFormatException exception) {
             JOptionPane.showMessageDialog(
                     null,
@@ -127,7 +132,7 @@ public class Btns extends JFrame {
     add(btn);
 }
 
-    public void btnEdit() throws SQLException {
+    public void btnEdit(JPanel centralPanel) throws SQLException {
         JLabel lblCodeP = new JLabel("Code product");
         JTextField txtCodeP = new JTextField();
         txtCodeP.setText("Code product");
@@ -187,6 +192,7 @@ public class Btns extends JFrame {
             Product p = new ManagerProduct().searchProduct(codeP);
             try {
                 new ManagerProduct().editProduct(p, name, code, stock, price);
+                new Panel_Product(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -213,7 +219,7 @@ public class Btns extends JFrame {
         add(btnSave);
     }
 
-    public void btnIn() throws SQLException {
+    public void btnIn(JPanel centralPanel) throws SQLException {
         JLabel lblCode = new JLabel("Code product");
         lblCode.setFont(new Font("Arial",  Font.PLAIN, 18));
         JTextField txtCode = new JTextField();
@@ -228,7 +234,7 @@ public class Btns extends JFrame {
 
         functionJTxtFiled(txtIn, "Example: 20");
 
-        JButton btnSave = getJButton(txtCode, txtIn, "IN");
+        JButton btnSave = getJButton(txtCode, txtIn, "IN", centralPanel);
 
         add(lblCode);
         add(txtCode);
@@ -237,7 +243,7 @@ public class Btns extends JFrame {
         add(btnSave);
     }
 
-    public void btnOut() throws SQLException {
+    public void btnOut(JPanel centralPanel) throws SQLException {
         JLabel lblCode = new JLabel("Code product");
         lblCode.setFont(new Font("Arial",  Font.PLAIN, 18));
         JTextField txtCode = new JTextField();
@@ -251,7 +257,7 @@ public class Btns extends JFrame {
         txtOut.setText("Example: 20");
 
         functionJTxtFiled(txtOut, "Example: 20");
-        JButton btnSave = getJButton(txtCode, txtOut, "OUT");
+        JButton btnSave = getJButton(txtCode, txtOut, "OUT", centralPanel);
 
         add(lblCode);
         add(txtCode);
@@ -261,7 +267,7 @@ public class Btns extends JFrame {
     }
 
 
-    private JButton getJButton(JTextField txtCode, JTextField txtInOrOut, String inOrOut) {
+    private JButton getJButton(JTextField txtCode, JTextField txtInOrOut, String inOrOut, JPanel centralPanel) {
         JButton btnSave = new JButton("Save");
 
         btnSave.addActionListener(e->{
@@ -282,6 +288,7 @@ public class Btns extends JFrame {
 
             try {
                 new ManagerProduct().sellOrRestockProduct(code, inOrOut, productsIn);
+                new Panel_Product(centralPanel);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
