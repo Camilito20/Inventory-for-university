@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Es la clase principal de la interfaz grafica y llama a todas
+ * Es la clase principal de la interfaz gráfica y llama a todas
  * las demás clases para poder generar una interfaz funcional
  */
 public class MainWindow extends JFrame{
@@ -23,7 +23,7 @@ public class MainWindow extends JFrame{
         //Sidebar
         JPanel sidebar = new JPanel();
         sidebar.setPreferredSize(new Dimension(400,0));
-        sidebar.setBackground(new Color(0, 38, 165));
+        sidebar.setBackground(new Color(15, 23, 42));
 
 
         //Central window

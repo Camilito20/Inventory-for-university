@@ -8,7 +8,7 @@ public class ButtonRenderer extends JButton implements TableCellRenderer {
 
     public ButtonRenderer() {
         setText("Sell");
-        setBackground(Color.BLUE);
+        setBackground(new Color(254, 0, 0));
         setForeground(Color.WHITE);
     }
 

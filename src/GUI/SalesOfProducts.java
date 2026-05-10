@@ -21,7 +21,7 @@ public class SalesOfProducts extends Panel_abstract{
     @Override
     JMenuBar menuBar(JPanel centralPanel) {
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(new Color(34, 34, 128));
+        menuBar.setBackground(new Color(15, 23, 42));
 
         JLabel title = new JLabel("  - Seles of products");
         title.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -65,12 +65,12 @@ public class SalesOfProducts extends Panel_abstract{
             }
             JTable tableProducts = new JTable(model);
             //Titulos de las columnas
-            tableProducts.getTableHeader().setBackground(new Color(34, 34, 128));
+            tableProducts.getTableHeader().setBackground(titlesTable);
             tableProducts.getTableHeader().setForeground(Color.WHITE);
-            tableProducts.getTableHeader().setFont(new Font("Arial", Font.BOLD, 20));
+            tableProducts.getTableHeader().setFont(textTable);
             //Celdas normales
-            tableProducts.setRowHeight(35);
-            tableProducts.setFont(new Font("Arial", Font.PLAIN, 20));
+            tableProducts.setRowHeight(rowHeight);
+            tableProducts.setFont(textTable);
             tableProducts.setSelectionBackground(new Color(254, 254, 254));
             //Crea el boton en la tabla
             tableProducts.getColumn("Sell").setCellRenderer(new ButtonRenderer());

@@ -15,6 +15,10 @@ import java.util.ArrayList;
  * por cada clase que se usa para mostrar los productos del programa
  */
 abstract public class Panel_abstract {
+
+    int rowHeight = 40;
+    Color titlesTable = new Color(43, 60, 87);
+    Font textTable = new Font("Arial", Font.BOLD, 20);
     public Panel_abstract(JPanel centralPanel) throws SQLException {
         centralPanel.removeAll();
         centralPanel.setLayout(new BorderLayout());

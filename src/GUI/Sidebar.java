@@ -10,21 +10,23 @@ import java.sql.SQLException;
  * clase que usan para cada botone
  */
 public class Sidebar {
-
     public Sidebar(JPanel sidebar, JPanel centralPanel){
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
 
-        JLabel label = new JLabel("Welcome to \nInventory System");
+        JLabel label = new JLabel("Inventory System", new ImageIcon("src/images/inventario.png"), SwingConstants.LEFT);
         label.setFont(new Font("Arial", Font.BOLD, 24));
         label.setForeground(Color.WHITE);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setIconTextGap(10);
+        label.setHorizontalTextPosition(SwingConstants.RIGHT);
 
         sidebar.add(Box.createVerticalStrut(40));
         sidebar.add(label);
         sidebar.add(Box.createVerticalStrut(40));
 
+
         for(JButton button: buttons(centralPanel)){
-            button.setBackground(new Color(0, 38, 165));
+            button.setBackground(new Color(15, 23, 42));
             button.setForeground(Color.WHITE);
             button.setFont(new Font("Arial", Font.PLAIN, 24));
 
@@ -41,7 +43,7 @@ public class Sidebar {
                 }
 
                 public void mouseExited(java.awt.event.MouseEvent evt) {
-                    button.setBackground(new Color(0, 38, 165));
+                    button.setBackground(new Color(15, 23, 42));
                     button.setForeground(Color.WHITE);
                 }
             });
@@ -60,10 +62,33 @@ public class Sidebar {
     }
 
     private JButton[] buttons(JPanel centralPanel){
-        JButton btnProducts = new JButton("Products");
-        JButton btnStock_in_and_out = new JButton("Stock in and out");
-        JButton btnPurchasing_and_sales = new JButton("Sales of products");
-        JButton btnReports = new JButton("Reports");
+        //Button products
+        ImageIcon imgProducts = new ImageIcon("src/images/calendario_blanco.png");
+        Image scaledImage = imgProducts.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+        ImageIcon iconProducts = new ImageIcon(scaledImage);
+
+        JButton btnProducts = new JButton("Products", iconProducts);
+
+        //Button stock in and out
+        ImageIcon imgStock_in_and_out = new ImageIcon("src/images/in_and_out.png");
+        Image scaledImageStock_in_and_out = imgStock_in_and_out.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+        ImageIcon iconStock_in_and_out = new ImageIcon(scaledImageStock_in_and_out);
+
+        JButton btnStock_in_and_out = new JButton("Stock in and out", iconStock_in_and_out);
+
+        //Button sales of products
+        ImageIcon imgPurchasing_and_sales = new ImageIcon("src/images/venta.png");
+        Image scaledImagePurchasing_and_sales = imgPurchasing_and_sales.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+        ImageIcon iconPurchasing_and_sales = new ImageIcon(scaledImagePurchasing_and_sales);
+
+        JButton btnPurchasing_and_sales = new JButton("Sales of products", iconPurchasing_and_sales);
+
+        //button reports
+        ImageIcon imgReports = new ImageIcon("src/images/calendario_blanco.png");
+        Image scaledImageReports = imgReports.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+        ImageIcon iconReports = new ImageIcon(scaledImageReports);
+
+        JButton btnReports = new JButton("Reports", iconReports);
         //JButton btnEmployees = new JButton("Employees");
         //JButton btnSettings = new JButton("Settings");
 
