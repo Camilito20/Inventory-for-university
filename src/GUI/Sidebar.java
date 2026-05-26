@@ -10,7 +10,7 @@ import java.sql.SQLException;
  * clase que usan para cada botone
  */
 public class Sidebar {
-    public Sidebar(JPanel sidebar, JPanel centralPanel){
+    public Sidebar(JPanel sidebar, JPanel centralPanel, MainWindow mainWindow){
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
 
         JLabel label = new JLabel("Inventory System", new ImageIcon("src/images/inventario.png"), SwingConstants.LEFT);
@@ -25,10 +25,11 @@ public class Sidebar {
         sidebar.add(Box.createVerticalStrut(40));
 
 
-        for(JButton button: buttons(centralPanel)){
-            button.setBackground(new Color(15, 23, 42));
-            button.setForeground(Color.WHITE);
+        for(JButton button: buttons(centralPanel, mainWindow)){
+            button.setBackground(ThemeManager.sidebarColor);
+            button.setForeground(ThemeManager.buttonHoverColor);
             button.setFont(new Font("Arial", Font.PLAIN, 24));
+            button.setHorizontalAlignment(SwingConstants.LEFT);
 
             button.setBorderPainted(false);
             button.setFocusPainted(false);
@@ -38,13 +39,13 @@ public class Sidebar {
             //Cambia de color al pasar el mouse por encima
             button.addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseEntered(java.awt.event.MouseEvent evt) {
-                    button.setBackground(new Color(255, 255, 255));
-                    button.setForeground(Color.BLACK);
+                    button.setBackground((ThemeManager.buttonHoverColor));
+                    button.setForeground(ThemeManager.buttonHoverText);
                 }
 
                 public void mouseExited(java.awt.event.MouseEvent evt) {
-                    button.setBackground(new Color(15, 23, 42));
-                    button.setForeground(Color.WHITE);
+                    button.setBackground((ThemeManager.sidebarColor));
+                    button.setForeground(ThemeManager.textColor);
                 }
             });
 
@@ -59,15 +60,17 @@ public class Sidebar {
             sidebar.add(Box.createVerticalStrut(15));
             sidebar.add(button);
         }
+
     }
 
-    private JButton[] buttons(JPanel centralPanel){
+    private JButton[] buttons(JPanel centralPanel, MainWindow mainWindow){
         //Button products
         ImageIcon imgProducts = new ImageIcon("src/images/calendario_blanco.png");
         Image scaledImage = imgProducts.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
         ImageIcon iconProducts = new ImageIcon(scaledImage);
 
         JButton btnProducts = new JButton("Products", iconProducts);
+        JButton btnTheme = new JButton("Change theme");
 
         //Button stock in and out
         ImageIcon imgStock_in_and_out = new ImageIcon("src/images/in_and_out.png");
@@ -123,6 +126,11 @@ public class Sidebar {
                 throw new RuntimeException(ex);
             }
         });
+
+        btnTheme.addActionListener(e -> {
+            ThemeManager.switchTheme();
+            mainWindow.reloadTheme();
+        });
         /*
         btnEmployees.addActionListener( e -> {
 
@@ -147,7 +155,8 @@ public class Sidebar {
                 btnProducts,
                 btnStock_in_and_out,
                 btnPurchasing_and_sales,
-                btnReports
+                btnReports,
+                btnTheme
                 //btnEmployees,
                 //btnSettings
         };

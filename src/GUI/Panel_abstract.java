@@ -17,7 +17,7 @@ import java.util.ArrayList;
 abstract public class Panel_abstract {
 
     int rowHeight = 40;
-    Color titlesTable = new Color(43, 60, 87);
+    Color titlesTable = ThemeManager.tableHeaderColor;
     Font textTable = new Font("Arial", Font.BOLD, 20);
     public Panel_abstract(JPanel centralPanel) throws SQLException {
         centralPanel.removeAll();

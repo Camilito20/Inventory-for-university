@@ -26,6 +26,7 @@ public class Reports extends Panel_abstract{
         title.setForeground(Color.WHITE);
 
         //Entrada de productos
+        /*
         JMenu reportsOrder = new JMenu("Report order");
         reportsOrder.setForeground(Color.WHITE);
         for (JMenuItem i : getMenuItems()){
@@ -45,10 +46,10 @@ public class Reports extends Panel_abstract{
         });
         out.add(outProduct);
 
+         */
+
         menuBar.add(title);
         menuBar.add(Box.createHorizontalGlue());
-        menuBar.add(reportsOrder);
-        menuBar.add(out);
 
         return menuBar;
     }
@@ -76,7 +77,7 @@ public class Reports extends Panel_abstract{
         JPanel panelProducts = new JPanel();
         panelProducts.setLayout(new BorderLayout());
 
-        String[] columns = {"Code", "Name", "IN", "OUT", "Data"};
+        String[] columns = {"Name", "Code", "IN", "OUT", "Data"};
 
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override

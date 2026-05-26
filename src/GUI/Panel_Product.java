@@ -50,7 +50,12 @@ public class Panel_Product extends Panel_abstract{
             try {
                 new Btns().btnAdd(centralPanel);
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Error: "+ ex.getMessage(),
+                        "Error",
+                        JOptionPane.WARNING_MESSAGE
+                );
             }
         });
 
@@ -58,7 +63,12 @@ public class Panel_Product extends Panel_abstract{
             try {
                 new Btns().btnDelete(centralPanel);
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Error: "+ ex.getMessage(),
+                        "Error",
+                        JOptionPane.WARNING_MESSAGE
+                );
             }
         });
 
@@ -66,7 +76,12 @@ public class Panel_Product extends Panel_abstract{
             try {
                 new Btns().btnEdit(centralPanel);
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Error: "+ ex.getMessage(),
+                        "Error",
+                        JOptionPane.WARNING_MESSAGE
+                );
             }
         });
 

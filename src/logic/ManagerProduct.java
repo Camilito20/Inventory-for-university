@@ -104,14 +104,17 @@ public class ManagerProduct {
      * @throws SQLException Por si sale algún error de la base de datos al ingresar los datos
      */
     public void sellOrRestockProduct(int code, String type, int numIn_Out) throws SQLException{
+        Integer num = null;
         String codeString = String.format("%03d", code);
 
         Product product = ProductRepository.show(codeString);
         System.out.println(product.getId());
         if (numIn_Out > product.getStock() && type.equalsIgnoreCase("OUT")) throw new IllegalArgumentException("The quantity exceeds the available stock");
+        if (type.equalsIgnoreCase("OUT")) num = product.getStock() - numIn_Out;
+        else if (type.equalsIgnoreCase("IN")) num = product.getStock() + numIn_Out;
 
         ProductRepository.sellOrRestockProductBs(product.getId(), type.toUpperCase(), numIn_Out);
-
+        ProductRepository.editProduct(product.getId(), null, null, num, null);
     }
 
     /**

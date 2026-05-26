@@ -74,7 +74,13 @@ public class Btns extends JFrame {
                 new ManagerProduct().addProduct(name, code, stock, price);
                 new Panel_Product(centralPanel);
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Repeated product",
+                        "Error",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
             dispose();

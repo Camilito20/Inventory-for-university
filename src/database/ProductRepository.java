@@ -224,7 +224,7 @@ public class ProductRepository {
         }
     }
 
-    public void editProduct(int id, String newName, String newCode, Integer newStock, Double newPrice) {
+    public static void editProduct(int id, String newName, String newCode, Integer newStock, Double newPrice) throws SQLException, IllegalArgumentException {
         StringBuilder sql = new StringBuilder("UPDATE products SET ");
         List<Object> values = new ArrayList<>();
 
@@ -259,15 +259,15 @@ public class ProductRepository {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
 
-            // Asignar valores a los ?
             for (int i = 0; i < values.size(); i++) {
                 stmt.setObject(i + 1, values.get(i));
             }
 
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            if (rowsAffected == 0) {
+                throw new IllegalArgumentException("Product not found");
+            }
         }
     }
 }
